@@ -3,8 +3,8 @@ package com.adi3000.projectile_simulator.math;
 @SuppressWarnings("unused")
 public class Vector2 {
     
-    private double x;
-    private double y;
+    public double x;
+    public double y;
     
     public Vector2(double x, double y) {
         this.x = x;
@@ -14,7 +14,7 @@ public class Vector2 {
         this(v.x, v.y);
     }
     public Vector2(Vector3 v) {
-        this(v.getX(), v.getY());
+        this(v.x, v.y);
     }
     public Vector2(double[] components) {
         this(components[0], components[1]);
@@ -36,18 +36,8 @@ public class Vector2 {
     public Vector3 toVector3() {
         return new Vector3(x, y, 0);
     }
-    
-    public double getX() {
-        return x;
-    }
-    public void setX(double x) {
-        this.x = x;
-    }
-    public double getY() {
-        return y;
-    }
-    public void setY(double y) {
-        this.y = y;
+    public Vector4 toVector4() {
+        return new Vector4(x, y, 0, 0);
     }
     
     public void set(double x, double y) {
@@ -58,7 +48,7 @@ public class Vector2 {
         set(v.x, v.y);
     }
     public void set(Vector3 v) {
-        set(v.getX(), v.getY());
+        set(v.x, v.y);
     }
     public void set(double[] components) {
         set(components[0], components[1]);
@@ -79,17 +69,17 @@ public class Vector2 {
     public static Vector2 sub(Vector2 v1, Vector2 v2) {
         return new Vector2(v1.x - v2.x, v1.y - v2.y);
     }
-    public Vector2 mult(double num) {
-        return mult(this, num);
+    public Vector2 mult(double scalar) {
+        return mult(this, scalar);
     }
-    public static Vector2 mult(Vector2 v, double num) {
-        return new Vector2(v.x * num, v.y * num);
+    public static Vector2 mult(Vector2 v, double scalar) {
+        return new Vector2(v.x * scalar, v.y * scalar);
     }
-    public Vector2 div(double num) {
-        return mult(this, num);
+    public Vector2 div(double scalar) {
+        return div(this, scalar);
     }
-    public static Vector2 div(Vector2 v, double num) {
-        return new Vector2(v.x / num, v.y / num);
+    public static Vector2 div(Vector2 v, double scalar) {
+        return new Vector2(v.x / scalar, v.y / scalar);
     }
     
     public double mag() {

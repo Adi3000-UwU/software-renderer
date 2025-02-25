@@ -3,9 +3,9 @@ package com.adi3000.projectile_simulator.math;
 @SuppressWarnings("unused")
 public class Vector3 {
     
-    private double x;
-    private double y;
-    private double z;
+    public double x;
+    public double y;
+    public double z;
     
     public Vector3(double x, double y, double z) {
         this.x = x;
@@ -15,8 +15,11 @@ public class Vector3 {
     public Vector3(Vector3 v) {
         this(v.x, v.y, v.z);
     }
+    public Vector3(Vector4 v) {
+        this(v.x, v.y, v.z);
+    }
     public Vector3(Vector2 v) {
-        this(v.getX(), v.getY(), 0);
+        this(v.x, v.y, 0);
     }
     public Vector3(double[] components) {
         this(components[0], components[1], components[2]);
@@ -38,24 +41,8 @@ public class Vector3 {
     public Vector2 toVector2() {
         return new Vector2(x, y);
     }
-    
-    public double getX() {
-        return x;
-    }
-    public void setX(double x) {
-        this.x = x;
-    }
-    public double getY() {
-        return y;
-    }
-    public void setY(double y) {
-        this.y = y;
-    }
-    public double getZ() {
-        return z;
-    }
-    public void setZ(double z) {
-        this.z = z;
+    public Vector4 toVector4() {
+        return new Vector4(x, y, z, 0);
     }
     
     public void set(double x, double y, double z) {
@@ -63,11 +50,14 @@ public class Vector3 {
         this.y = y;
         this.z = z;
     }
+    public void set(Vector4 v) {
+        set(v.x, v.y, v.z);
+    }
     public void set(Vector3 v) {
         set(v.x, v.y, v.z);
     }
-    public void set(Vector2 v) {
-        set(v.getX(), v.getY(), 0);
+    public void set(Vector2 v, double scalar) {
+        set(v.x, v.y, scalar);
     }
     public void set(double[] components) {
         set(components[0], components[1], components[2]);
@@ -88,17 +78,17 @@ public class Vector3 {
     public static Vector3 sub(Vector3 v1, Vector3 v2) {
         return new Vector3(v1.x - v2.x, v1.y - v2.y, v1.z - v2.z);
     }
-    public Vector3 mult(double num) {
-        return mult(this, num);
+    public Vector3 mult(double scalar) {
+        return mult(this, scalar);
     }
-    public static Vector3 mult(Vector3 v, double num) {
-        return new Vector3(v.x * num, v.y * num, v.z * num);
+    public static Vector3 mult(Vector3 v, double scalar) {
+        return new Vector3(v.x * scalar, v.y * scalar, v.z * scalar);
     }
-    public Vector3 div(double num) {
-        return mult(this, num);
+    public Vector3 div(double scalar) {
+        return div(this, scalar);
     }
-    public static Vector3 div(Vector3 v, double num) {
-        return new Vector3(v.x / num, v.y / num, v.z / num);
+    public static Vector3 div(Vector3 v, double scalar) {
+        return new Vector3(v.x / scalar, v.y / scalar, v.z / scalar);
     }
     
     public double mag() {
@@ -137,5 +127,4 @@ public class Vector3 {
         return Math.sqrt(Math.pow(v2.x - v1.x, 2) + Math.pow(v2.y - v1.y, 2) + Math.pow(v2.z - v1.z, 2));
     }
     
-    // TODO Add angle calculations using quaternions
 }
