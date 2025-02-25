@@ -1,5 +1,7 @@
 package com.adi3000.projectile_simulator.main;
 
+import com.adi3000.projectile_simulator.rendering.Engine;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -9,6 +11,7 @@ public class Game extends JPanel implements Runnable {
     // Dimensions
     public static final int WIDTH = 854;
     public static final int HEIGHT = 480;
+    public static final double ASPECT_RATIO = (double) WIDTH /HEIGHT;
     private static final int SCREEN_WIDTH = 1280;
     private static final int SCREEN_HEIGHT = 720;
     
@@ -22,6 +25,8 @@ public class Game extends JPanel implements Runnable {
     // Image
     private BufferedImage image;
     private Graphics2D g2d;
+    
+    private Engine engine;
     
     
     public Game() {
@@ -46,6 +51,7 @@ public class Game extends JPanel implements Runnable {
         g2d = image.createGraphics();
         running = true;
         
+        engine = new Engine();
     }
     
     public void run() {
@@ -90,6 +96,7 @@ public class Game extends JPanel implements Runnable {
     private void render() {
         g2d.fillRect(0, 0, WIDTH, HEIGHT);
         
+        engine.render(g2d);
         
         drawFPS();
     }
