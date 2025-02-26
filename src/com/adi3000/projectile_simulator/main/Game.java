@@ -96,7 +96,7 @@ public class Game extends JPanel implements Runnable {
     private void render() {
         g2d.fillRect(0, 0, WIDTH, HEIGHT);
         
-        engine.render(g2d);
+        engine.render(image);
         
         drawFPS();
     }
