@@ -43,8 +43,7 @@ public class Face {
         return new Vector3(u, v, w);
     }
     
-    public boolean isPointInTriangle(ArrayList<Vector3> triangleVertices, Vector3 point) {
-        Vector3 barycentricCoords = getBarycentricCoords(triangleVertices, point);
+    public boolean isPointInTriangle(Vector3 barycentricCoords) {
         return barycentricCoords.x >= 0 && barycentricCoords.y >= 0 && barycentricCoords.z >= 0;
     }
     

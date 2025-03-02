@@ -90,7 +90,7 @@ public class Game extends JPanel implements Runnable {
     }
     
     private void tick() {
-    
+        engine.tick();
     }
     
     private void render() {

@@ -42,7 +42,7 @@ public class Vector3 {
         return new Vector2(x, y);
     }
     public Vector4 toVector4() {
-        return new Vector4(x, y, z, 0);
+        return new Vector4(x, y, z, 1);
     }
     
     public void set(double x, double y, double z) {

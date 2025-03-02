@@ -2,6 +2,7 @@ package com.adi3000.projectile_simulator.rendering;
 
 import com.adi3000.projectile_simulator.main.Game;
 import com.adi3000.projectile_simulator.math.Matrix;
+import com.adi3000.projectile_simulator.math.Quaternion;
 import com.adi3000.projectile_simulator.math.Vector3;
 import com.adi3000.projectile_simulator.math.Vector4;
 
@@ -9,6 +10,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Engine {
     
@@ -18,37 +20,35 @@ public class Engine {
     
     private Mesh mesh = new Mesh();
     
-    private Matrix perspectiveProjection = new Matrix(new double[][] {
-            {1 / (Math.tan(Math.toRadians(fov) / 2) * Game.ASPECT_RATIO), 0, 0, 0},
-            {0, 1 / Math.tan(Math.toRadians(fov) / 2), 0, 0},
-            {0, 0, (-zFar - zNear) / (zNear - zFar), (zNear * zFar * 2) / (zNear - zFar)},
-            {0, 0, 1, 0}
-    });
     
     public Engine() {
-        mesh.addVertex(new Vector3(-0.6, 0.6, 1));
-        mesh.addVertex(new Vector3(0.6, 0.6, 1));
-        mesh.addVertex(new Vector3(-0.6, -0.6, 1));
-        mesh.addVertex(new Vector3(0.6, -0.6, 1));
+        mesh = createCube(new Vector3(0, 0, 4), Quaternion.fromEulerAngleDegree(45.26, 0, 35.26));
         
-        mesh.addFace(new int[] {0, 1, 2});
-        mesh.addFace(new int[] {3, 2, 1});
+    }
+    
+    public void tick() {
+        mesh.rotation.rotate(Quaternion.fromEulerAngleDegree(0, 1.2, 0));
+        
     }
     
     public void render(BufferedImage image) {
         int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
         
+        double[] zbuffer = new double[pixels.length];
+        Arrays.fill(zbuffer, 1);
+        
         ArrayList<Vector3> vertices = new ArrayList<>();
         
         for (Vector3 vertex : mesh.vertices) {
-            Vector4 clip = perspectiveProjection.transform(new Vector4(vertex, 1));
+            Vector3 worldPos = Matrix.getWorldMatrix(mesh.position, mesh.rotation).transform(vertex);
+            Vector4 clip = Matrix.getProjectionMatrix(fov, Game.ASPECT_RATIO, zNear, zFar).transform(worldPos.toVector4());
             
             Vector3 ndc = clip.div(clip.w).toVector3();
             
             double x = (ndc.x + 1) * Game.WIDTH / 2;
             double y = (-ndc.y + 1) * Game.HEIGHT / 2;
             
-            vertices.add(new Vector3(x, y, 0));
+            vertices.add(new Vector3(x, y, ndc.z));
             
         }
         
@@ -56,17 +56,60 @@ public class Engine {
             ArrayList<Vector3> faceVertices = face.getFaceVertices(vertices);
             Rectangle boundingBox = face.getTriangleBoundingBox(faceVertices);
             
-            for (int i = boundingBox.x; i < boundingBox.x + boundingBox.width; i++) {
-                for (int j = boundingBox.y; j < boundingBox.y + boundingBox.height; j++) {
+            for (int i = Math.max(boundingBox.x, 0); i < Math.min(boundingBox.x + boundingBox.width, Game.WIDTH); i++) {
+                for (int j = Math.max(boundingBox.y, 0); j < Math.min(boundingBox.y + boundingBox.height, Game.HEIGHT); j++) {
+                    Vector3 barycentricCoords = face.getBarycentricCoords(faceVertices, new Vector3(i, j, 0));
                     
-                    if (face.isPointInTriangle(faceVertices, new Vector3(i, j, 0)) && (i >= 0 && i < Game.WIDTH && j >= 0 && j < Game.HEIGHT)) {
-                        Vector3 barycentricCoords = face.getBarycentricCoords(faceVertices, new Vector3(i, j, 0));
-                        pixels[i + j * Game.WIDTH] = new Color((int) (barycentricCoords.x * 255), (int) (barycentricCoords.y * 255), (int) (barycentricCoords.z * 255)).getRGB();
-//                        pixels[i + j * Game.WIDTH] = 0xFF000000;
+                    if (face.isPointInTriangle(barycentricCoords)) {
+                        int index = i + j * Game.WIDTH;
+                        
+                        double newZ = barycentricCoords.x * faceVertices.get(0).z + barycentricCoords.y * faceVertices.get(1).z + barycentricCoords.z * faceVertices.get(2).z;
+                        double oldZ = zbuffer[index];
+                        
+                        if (newZ > oldZ) {
+                            continue;
+                        }
+                        zbuffer[index] = newZ;
+                        
+                        pixels[index] = new Color((int) (barycentricCoords.x * 255), (int) (barycentricCoords.y * 255), (int) (barycentricCoords.z * 255)).getRGB();
                     }
                 }
             }
         }
+    }
+    
+    
+    private Mesh createCube(Vector3 position, Quaternion rotation) {
+        Mesh mesh = new Mesh(position, rotation);
+        
+        mesh.addVertex(new Vector3(-1, -1, -1));
+        mesh.addVertex(new Vector3(1, -1, -1));
+        mesh.addVertex(new Vector3(1, 1, -1));
+        mesh.addVertex(new Vector3(-1, 1, -1));
+        mesh.addVertex(new Vector3(-1, -1, 1));
+        mesh.addVertex(new Vector3(1, -1, 1));
+        mesh.addVertex(new Vector3(1, 1, 1));
+        mesh.addVertex(new Vector3(-1, 1, 1));
+        
+        mesh.addFace(new int[] {0, 1, 3});
+        mesh.addFace(new int[] {3, 1, 2});
+        
+        mesh.addFace(new int[] {1, 5, 2});
+        mesh.addFace(new int[] {2, 5, 6});
+        
+        mesh.addFace(new int[] {5, 4, 6});
+        mesh.addFace(new int[] {6, 4, 7});
+        
+        mesh.addFace(new int[] {4, 0, 7});
+        mesh.addFace(new int[] {7, 0, 3});
+        
+        mesh.addFace(new int[] {3, 2, 7});
+        mesh.addFace(new int[] {7, 2, 6});
+        
+        mesh.addFace(new int[] {4, 5, 0});
+        mesh.addFace(new int[] {0, 5, 1});
+        
+        return mesh;
     }
     
 }

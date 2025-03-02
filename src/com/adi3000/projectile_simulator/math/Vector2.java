@@ -37,7 +37,7 @@ public class Vector2 {
         return new Vector3(x, y, 0);
     }
     public Vector4 toVector4() {
-        return new Vector4(x, y, 0, 0);
+        return new Vector4(x, y, 0, 1);
     }
     
     public void set(double x, double y) {

@@ -54,11 +54,45 @@ public class Matrix {
                 v.x * values[12] + v.y * values[13] + v.z * values[14] + v.w * values[15]
         );
     }
-    public Vector4 transform(Vector3 v) {
-        return transform(v.toVector4());
+    public Vector3 transform(Vector3 v) {
+        return transform(v.toVector4()).toVector3();
     }
-    public Vector4 transform(Vector2 v) {
-        return transform(v.toVector4());
+    public Vector2 transform(Vector2 v) {
+        return transform(v.toVector4()).toVector2();
+    }
+    
+    
+    public static Matrix getWorldMatrix(Vector3 position, Quaternion rotation) {
+        double a = 1 - (2 * Math.pow(rotation.y, 2) + 2 * Math.pow(rotation.z, 2));
+        double b = 2 * rotation.x * rotation.y - 2 * rotation.w * rotation.z;
+        double c = 2 * rotation.x * rotation.z + 2 * rotation.w * rotation.y;
+        double d = 2 * rotation.x * rotation.y + 2 * rotation.w * rotation.z;
+        double e = 1 - (2 * Math.pow(rotation.x, 2) + 2 * Math.pow(rotation.z, 2));
+        double f = 2 * rotation.y * rotation.z - 2 * rotation.w * rotation.x;
+        double g = 2 * rotation.x * rotation.z - 2 * rotation.w * rotation.y;
+        double h = 2 * rotation.y * rotation.z + 2 * rotation.w * rotation.x;
+        double i = 1 - (2 * Math.pow(rotation.x, 2) + 2 * Math.pow(rotation.y, 2));
+        
+        return new Matrix(new double[][] {
+                {a, b, c, position.x},
+                {d, e, f, position.y},
+                {g, h, i, position.z},
+                {0, 0, 0, 1}
+        });
+    }
+    
+    public static Matrix getProjectionMatrix(double fov, double aspectRatio, double zNear, double zFar) {
+        double a = 1 / (Math.tan(Math.toRadians(fov) / 2) * aspectRatio);
+        double b = 1 / Math.tan(Math.toRadians(fov) / 2);
+        double c = (-zFar - zNear) / (zNear - zFar);
+        double d = (zNear * zFar * 2) / (zNear - zFar);
+        
+        return new Matrix(new double[][] {
+                {a, 0, 0, 0},
+                {0, b, 0, 0},
+                {0, 0, c, d},
+                {0, 0, 1, 0}
+        });
     }
     
 }
