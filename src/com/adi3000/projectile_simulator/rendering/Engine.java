@@ -48,7 +48,7 @@ public class Engine {
             double x = (ndc.x + 1) * Game.WIDTH / 2;
             double y = (-ndc.y + 1) * Game.HEIGHT / 2;
             
-            vertices.add(new Vector3(x, y, ndc.z));
+            vertices.add(new Vector3(Math.ceil(x), Math.ceil(y), ndc.z));
             
         }
         
@@ -58,7 +58,7 @@ public class Engine {
             
             for (int i = Math.max(boundingBox.x, 0); i < Math.min(boundingBox.x + boundingBox.width, Game.WIDTH); i++) {
                 for (int j = Math.max(boundingBox.y, 0); j < Math.min(boundingBox.y + boundingBox.height, Game.HEIGHT); j++) {
-                    Vector3 barycentricCoords = face.getBarycentricCoords(faceVertices, new Vector3(i, j, 0));
+                    Vector3 barycentricCoords = face.getBarycentricCoords(faceVertices, new Vector3(i + 0.5, j + 0.5, 0));
                     
                     if (face.isPointInTriangle(barycentricCoords)) {
                         int index = i + j * Game.WIDTH;
