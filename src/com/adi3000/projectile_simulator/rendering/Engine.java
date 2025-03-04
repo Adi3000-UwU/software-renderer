@@ -18,10 +18,14 @@ public class Engine {
     private double zNear = 0.1;
     private double fov = 80;
     
+    double[] emptyZBuffer = new double[Game.HEIGHT * Game.WIDTH];
+    
     private Mesh mesh = new Mesh();
     
     
     public Engine() {
+        Arrays.fill(emptyZBuffer, 1);
+        
         mesh = createCube(new Vector3(0, 0, 4), Quaternion.fromEulerAngleDegree(45.26, 0, 35.26));
         
     }
@@ -34,9 +38,7 @@ public class Engine {
     public void render(BufferedImage image) {
         int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
         
-        double[] zbuffer = new double[pixels.length];
-        Arrays.fill(zbuffer, 1);
-        
+        double[] zbuffer = Arrays.copyOf(emptyZBuffer, pixels.length);
         
         ArrayList<Vector3> screenVertices = new ArrayList<>();
         ArrayList<Vector3> ndcVertices = new ArrayList<>();
