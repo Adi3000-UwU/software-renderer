@@ -37,7 +37,9 @@ public class Engine {
         double[] zbuffer = new double[pixels.length];
         Arrays.fill(zbuffer, 1);
         
-        ArrayList<Vector3> vertices = new ArrayList<>();
+        
+        ArrayList<Vector3> screenVertices = new ArrayList<>();
+        ArrayList<Vector3> ndcVertices = new ArrayList<>();
         
         for (Vector3 vertex : mesh.vertices) {
             Vector3 worldPos = Matrix.getWorldMatrix(mesh.position, mesh.rotation).transform(vertex);
@@ -48,13 +50,19 @@ public class Engine {
             double x = (ndc.x + 1) * Game.WIDTH / 2;
             double y = (-ndc.y + 1) * Game.HEIGHT / 2;
             
-            vertices.add(new Vector3(Math.ceil(x), Math.ceil(y), ndc.z));
+            ndcVertices.add(ndc);
+            screenVertices.add(new Vector3(Math.ceil(x), Math.ceil(y), 0));
             
         }
         
         for (Face face : mesh.faces) {
-            ArrayList<Vector3> faceVertices = face.getFaceVertices(vertices);
+            ArrayList<Vector3> faceVertices = face.getFaceVertices(screenVertices);
+            ArrayList<Vector3> faceNdc = face.getFaceVertices(ndcVertices);
             Rectangle boundingBox = face.getTriangleBoundingBox(faceVertices);
+            
+            if (faceNdc.get(1).sub(faceNdc.get(0)).cross(faceNdc.get(2).sub(faceNdc.get(0))).z < 0) {
+                continue;
+            }
             
             for (int i = Math.max(boundingBox.x, 0); i < Math.min(boundingBox.x + boundingBox.width, Game.WIDTH); i++) {
                 for (int j = Math.max(boundingBox.y, 0); j < Math.min(boundingBox.y + boundingBox.height, Game.HEIGHT); j++) {
@@ -63,7 +71,7 @@ public class Engine {
                     if (face.isPointInTriangle(barycentricCoords)) {
                         int index = i + j * Game.WIDTH;
                         
-                        double newZ = barycentricCoords.x * faceVertices.get(0).z + barycentricCoords.y * faceVertices.get(1).z + barycentricCoords.z * faceVertices.get(2).z;
+                        double newZ = barycentricCoords.x * faceNdc.get(0).z + barycentricCoords.y * faceNdc.get(1).z + barycentricCoords.z * faceNdc.get(2).z;
                         double oldZ = zbuffer[index];
                         
                         if (newZ > oldZ) {
