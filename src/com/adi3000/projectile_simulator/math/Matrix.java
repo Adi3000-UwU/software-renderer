@@ -61,6 +61,55 @@ public class Matrix {
         return transform(v.toVector4()).toVector2();
     }
     
+    public Matrix invert() {
+        double[] result = new double[16];
+        
+        double num1 = values[10] * values[15] - values[11] * values[14];
+        double num2 = values[9] * values[15] - values[11] * values[13];
+        double num3 = values[9] * values[14] - values[10] * values[13];
+        double num4 = values[8] * values[15] - values[11] * values[12];
+        double num5 = values[8] * values[14] - values[10] * values[12];
+        double num6 = values[8] * values[13] - values[9] * values[12];
+        
+        double temp1 = values[5] * num1 - values[6] * num2 + values[7] * num3;
+        double temp2 = -(values[4] * num1 - values[6] * num4 + values[7] * num5);
+        double temp3 = values[4] * num2 - values[5] * num4 + values[7] * num6;
+        double temp4 = -(values[4] * num3 - values[5] * num5 + values[6] * num6);
+        double special = 1.0 / (values[0] * temp1 + values[1] * temp2 + values[2] * temp3 + values[3] * temp4);
+        
+        result[0] = temp1 * special;
+        result[4] = temp2 * special;
+        result[8] = temp3 * special;
+        result[12] = temp4 * special;
+        result[1] = -(values[1] * num1 - values[2] * num2 + values[3] * num3) * special;
+        result[5] = (values[0] * num1 - values[2] * num4 + values[3] * num5) * special;
+        result[9] = -(values[0] * num2 - values[1] * num4 + values[3] * num6) * special;
+        result[13] = (values[0] * num3 - values[1] * num5 + values[2] * num6) * special;
+        double num7 = values[6] * values[15] - values[7] * values[14];
+        double num8 = values[5] * values[15] - values[7] * values[13];
+        double num9 = values[5] * values[14] - values[6] * values[13];
+        double num10 = values[4] * values[15] - values[7] * values[12];
+        double num11 = values[4] * values[14] - values[6] * values[12];
+        double num12 = values[4] * values[13] - values[5] * values[12];
+        result[2] = (values[1] * num7 - values[2] * num8 + values[3] * num9) * special;
+        result[6] = -(values[0] * num7 - values[2] * num10 + values[3] * num11) * special;
+        result[10] = (values[0] * num8 - values[1] * num10 + values[3] * num12) * special;
+        result[14] = -(values[0] * num9 - values[1] * num11 + values[2] * num12) * special;
+        double num13 = values[6] * values[11] - values[7] * values[10];
+        double num14 = values[5] * values[11] - values[7] * values[9];
+        double num15 = values[5] * values[10] - values[6] * values[9];
+        double num16 = values[4] * values[11] - values[7] * values[8];
+        double num17 = values[4] * values[10] - values[6] * values[8];
+        double num18 = values[4] * values[9] - values[5] * values[8];
+        result[3] = -(values[1] * num13 - values[2] * num14 + values[3] * num15) * special;
+        result[7] = (values[0] * num13 - values[2] * num16 + values[3] * num17) * special;
+        result[11] = -(values[0] * num14 - values[1] * num16 + values[3] * num18) * special;
+        result[15] = (values[0] * num15 - values[1] * num17 + values[2] * num18) * special;
+        
+        values = result;
+        return this;
+    }
+    
     
     public static Matrix getWorldMatrix(Vector3 position, Quaternion rotation) {
         double a = 1 - (2 * Math.pow(rotation.y, 2) + 2 * Math.pow(rotation.z, 2));
