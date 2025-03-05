@@ -11,6 +11,9 @@ public class Matrix {
     public Matrix() {
         this.values = new double[16];
     }
+    public Matrix(Matrix matrix) {
+        values = matrix.values;
+    }
     public Matrix(double[] values) {
         this.values = values;
     }
@@ -111,16 +114,24 @@ public class Matrix {
     }
     
     
+    public static Matrix getViewMatrix(Vector3 position, Quaternion rotation) {
+        return getWorldMatrix(position, rotation).invert();
+    }
+    
     public static Matrix getWorldMatrix(Vector3 position, Quaternion rotation) {
-        double a = 1 - (2 * Math.pow(rotation.y, 2) + 2 * Math.pow(rotation.z, 2));
-        double b = 2 * rotation.x * rotation.y - 2 * rotation.w * rotation.z;
-        double c = 2 * rotation.x * rotation.z + 2 * rotation.w * rotation.y;
-        double d = 2 * rotation.x * rotation.y + 2 * rotation.w * rotation.z;
-        double e = 1 - (2 * Math.pow(rotation.x, 2) + 2 * Math.pow(rotation.z, 2));
-        double f = 2 * rotation.y * rotation.z - 2 * rotation.w * rotation.x;
-        double g = 2 * rotation.x * rotation.z - 2 * rotation.w * rotation.y;
-        double h = 2 * rotation.y * rotation.z + 2 * rotation.w * rotation.x;
-        double i = 1 - (2 * Math.pow(rotation.x, 2) + 2 * Math.pow(rotation.y, 2));
+        return getWorldMatrix(position, rotation, new Vector3(1, 1, 1));
+    }
+    
+    public static Matrix getWorldMatrix(Vector3 position, Quaternion rotation, Vector3 scale) {
+        double a = (1 - (2 * Math.pow(rotation.y, 2) + 2 * Math.pow(rotation.z, 2))) * scale.x;
+        double b = (2 * rotation.x * rotation.y - 2 * rotation.w * rotation.z) * scale.y;
+        double c = (2 * rotation.x * rotation.z + 2 * rotation.w * rotation.y) * scale.z;
+        double d = (2 * rotation.x * rotation.y + 2 * rotation.w * rotation.z) * scale.x;
+        double e = (1 - (2 * Math.pow(rotation.x, 2) + 2 * Math.pow(rotation.z, 2))) * scale.y;
+        double f = (2 * rotation.y * rotation.z - 2 * rotation.w * rotation.x) * scale.z;
+        double g = (2 * rotation.x * rotation.z - 2 * rotation.w * rotation.y) * scale.x;
+        double h = (2 * rotation.y * rotation.z + 2 * rotation.w * rotation.x) * scale.y;
+        double i = (1 - (2 * Math.pow(rotation.x, 2) + 2 * Math.pow(rotation.y, 2))) * scale.z;
         
         return new Matrix(new double[][] {
                 {a, b, c, position.x},

@@ -14,17 +14,18 @@ import java.util.Arrays;
 
 public class Engine {
     
-    private double zFar = 100;
-    private double zNear = 0.1;
-    private double fov = 80;
-    
     double[] emptyZBuffer = new double[Game.HEIGHT * Game.WIDTH];
     
-    private Mesh mesh = new Mesh();
+    private Camera camera;
+    
+    
+    private Mesh mesh;
     
     
     public Engine() {
         Arrays.fill(emptyZBuffer, 1);
+        
+        camera = new Camera(new Vector3(0, 0, 0), Quaternion.fromEulerAngleDegree(0, 0, 0));
         
         mesh = createCube(new Vector3(0, 0, 4), Quaternion.fromEulerAngleDegree(45.26, 0, 35.26));
         
@@ -45,7 +46,8 @@ public class Engine {
         
         for (Vector3 vertex : mesh.vertices) {
             Vector3 worldPos = Matrix.getWorldMatrix(mesh.position, mesh.rotation).transform(vertex);
-            Vector4 clip = Matrix.getProjectionMatrix(fov, Game.ASPECT_RATIO, zNear, zFar).transform(worldPos.toVector4());
+            Vector3 viewPos = Matrix.getViewMatrix(camera.position, camera.rotation).transform(worldPos);
+            Vector4 clip = Matrix.getProjectionMatrix(camera.fov, Game.ASPECT_RATIO, camera.zNear, camera.zFar).transform(viewPos.toVector4());
             
             Vector3 ndc = clip.div(clip.w).toVector3();
             
@@ -53,7 +55,7 @@ public class Engine {
             double y = (-ndc.y + 1) * Game.HEIGHT / 2;
             
             ndcVertices.add(ndc);
-            screenVertices.add(new Vector3(Math.ceil(x), Math.ceil(y), 0));
+            screenVertices.add(new Vector3(Math.ceil(x), Math.ceil(y), clip.w));
             
         }
         
@@ -61,6 +63,11 @@ public class Engine {
             ArrayList<Vector3> faceVertices = face.getFaceVertices(screenVertices);
             ArrayList<Vector3> faceNdc = face.getFaceVertices(ndcVertices);
             Rectangle boundingBox = face.getTriangleBoundingBox(faceVertices);
+            
+            // Quick fix, TODO Add frustum culling to fix objects apearing from behind the screen
+            if (faceVertices.get(0).z < -0 || faceVertices.get(1).z < 0 || faceVertices.get(2).z < 0) {
+                continue;
+            }
             
             if (faceNdc.get(1).sub(faceNdc.get(0)).cross(faceNdc.get(2).sub(faceNdc.get(0))).z < 0) {
                 continue;
