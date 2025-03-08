@@ -26,7 +26,8 @@ public class Game extends JPanel implements Runnable {
     private BufferedImage image;
     private Graphics2D g2d;
     
-    private Engine engine;
+    public static Engine engine;
+    private KeyHandler keyHandler = new KeyHandler();
     
     
     public Game() {
@@ -42,6 +43,9 @@ public class Game extends JPanel implements Runnable {
         super.addNotify();
         if (thread == null) {
             thread = new Thread(this);
+            
+            addKeyListener(keyHandler);
+            
             thread.start();
         }
     }

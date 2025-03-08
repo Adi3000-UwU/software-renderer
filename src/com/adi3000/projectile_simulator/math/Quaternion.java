@@ -33,6 +33,22 @@ public class Quaternion {
         return fromEulerAngle(Math.toRadians(u), Math.toRadians(v), Math.toRadians(w));
     }
     
+    public Vector3 toEulerAngle() {
+        double pitch = Math.asin(2 * (w * y - x * z));
+        
+        // Handle gimbal lock
+        if (pitch == -(Math.PI / 2)) {
+            return new Vector3(0, pitch, 2 * Math.atan2(x, w));
+        } else if (pitch == Math.PI / 2) {
+            return new Vector3(0, pitch, -2 * Math.atan2(x, w));
+        }
+        
+        double roll = Math.atan2(2 * (w * x + y * z), Math.pow(w, 2) - Math.pow(x, 2) - Math.pow(y, 2) + Math.pow(z, 2));
+        double yaw = Math.atan2(2 * (w * z + x * y), Math.pow(w, 2) + Math.pow(x, 2) - Math.pow(y, 2) - Math.pow(z, 2));
+        
+        return new Vector3(roll, pitch, yaw);
+    }
+    
     public void set(double x, double y, double z, double w) {
         this.x = x;
         this.y = y;

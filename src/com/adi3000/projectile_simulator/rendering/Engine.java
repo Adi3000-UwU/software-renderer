@@ -16,7 +16,7 @@ public class Engine {
     
     double[] emptyZBuffer = new double[Game.HEIGHT * Game.WIDTH];
     
-    private Camera camera;
+    public Camera camera;
     
     
     private Mesh mesh;
@@ -27,12 +27,13 @@ public class Engine {
         
         camera = new Camera(new Vector3(0, 0, 0), Quaternion.fromEulerAngleDegree(0, 0, 0));
         
-        mesh = createCube(new Vector3(0, 0, 4), Quaternion.fromEulerAngleDegree(45.26, 0, 35.26));
+//        mesh = createCube(new Vector3(0, 0, 4), Quaternion.fromEulerAngleDegree(45.26, 0, 35.26));
+        mesh = createCube(new Vector3(0, 0, 4), Quaternion.fromEulerAngleDegree(0, 0, 0));
         
     }
     
     public void tick() {
-        mesh.rotation.rotate(Quaternion.fromEulerAngleDegree(0, 1.2, 0));
+//        mesh.rotation.rotate(Quaternion.fromEulerAngleDegree(0, 1.2, 0));
         
     }
     
