@@ -1,7 +1,5 @@
 package com.adi3000.projectile_simulator.main;
 
-import com.adi3000.projectile_simulator.rendering.Engine;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -26,9 +24,7 @@ public class Game extends JPanel implements Runnable {
     private BufferedImage image;
     private Graphics2D g2d;
     
-    public static Engine engine;
-    private KeyHandler keyHandler = new KeyHandler();
-    
+    public static GameManager gameManager;
     
     public Game() {
         super();
@@ -44,7 +40,7 @@ public class Game extends JPanel implements Runnable {
         if (thread == null) {
             thread = new Thread(this);
             
-            addKeyListener(keyHandler);
+            addKeyListener(KeyHandler.getInstance());
             
             thread.start();
         }
@@ -55,7 +51,7 @@ public class Game extends JPanel implements Runnable {
         g2d = image.createGraphics();
         running = true;
         
-        engine = new Engine();
+        gameManager = new GameManager();
     }
     
     public void run() {
@@ -94,13 +90,13 @@ public class Game extends JPanel implements Runnable {
     }
     
     private void tick() {
-        engine.tick();
+        gameManager.tick();
     }
     
     private void render() {
         g2d.fillRect(0, 0, WIDTH, HEIGHT);
         
-        engine.render(image);
+        gameManager.render(image);
         
         drawFPS();
     }

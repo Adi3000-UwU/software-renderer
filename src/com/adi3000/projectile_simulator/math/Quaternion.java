@@ -34,12 +34,12 @@ public class Quaternion {
     }
     
     public Vector3 toEulerAngle() {
-        double pitch = Math.asin(2 * (w * y - x * z));
+        double pitch = Math.asin(Math.min(2 * (w * y - x * z), 1));
         
         // Handle gimbal lock
-        if (pitch == -(Math.PI / 2)) {
+        if (Math.abs(pitch - (Math.PI / 2)) <= 0.000001) {
             return new Vector3(0, pitch, 2 * Math.atan2(x, w));
-        } else if (pitch == Math.PI / 2) {
+        } else if (Math.abs(pitch + (Math.PI / 2)) <= 0.000001) {
             return new Vector3(0, pitch, -2 * Math.atan2(x, w));
         }
         
@@ -81,6 +81,15 @@ public class Quaternion {
     
     public void rotate(Quaternion rotation) {
         set(mult(this, rotation));
+    }
+    
+    public void incrementAngle(double u, double v, double w) {
+        Vector3 currentAngle = toEulerAngle();
+        set(fromEulerAngle(currentAngle.x + u, currentAngle.y + v,currentAngle.z + w));
+    }
+    
+    public void incrementAngleDegree(double u, double v, double w) {
+        incrementAngle(Math.toRadians(u), Math.toRadians(v), Math.toRadians(w));
     }
     
 }

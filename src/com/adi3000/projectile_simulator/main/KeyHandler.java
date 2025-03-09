@@ -1,6 +1,6 @@
 package com.adi3000.projectile_simulator.main;
 
-import com.adi3000.projectile_simulator.math.Quaternion;
+import com.adi3000.projectile_simulator.math.Vector2;
 import com.adi3000.projectile_simulator.math.Vector3;
 
 import java.awt.event.KeyEvent;
@@ -8,36 +8,50 @@ import java.awt.event.KeyListener;
 
 public class KeyHandler implements KeyListener {
     
+    private static KeyHandler instance;
+    
+    private KeyHandler() {}
+    
+    
+    public Vector3 cameraMovement = new Vector3();
+    public Vector2 cameraRotation = new Vector2();
+    
+    
     @Override
     public void keyTyped(KeyEvent e) {
     
     }
     @Override
     public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_W) {
-            Game.engine.camera.moveCamera(new Vector3(0, 0, 0.1));
-        } else if (e.getKeyCode() == KeyEvent.VK_S) {
-            Game.engine.camera.moveCamera(new Vector3(0, 0, -0.1));
-        } else if (e.getKeyCode() == KeyEvent.VK_A) {
-            Game.engine.camera.moveCamera(new Vector3(-0.1, 0, 0));
-        } else if (e.getKeyCode() == KeyEvent.VK_D) {
-            Game.engine.camera.moveCamera(new Vector3(0.1, 0, 0));
-        } else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-            Game.engine.camera.moveCamera(new Vector3(0, 0.1, 0));
-        } else if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
-            Game.engine.camera.moveCamera(new Vector3(0, -0.1, 0));
-        } else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-            Game.engine.camera.rotation.rotate(Quaternion.fromEulerAngleDegree(0, -1, 0));
-        } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-            Game.engine.camera.rotation.rotate(Quaternion.fromEulerAngleDegree(0, 1, 0));
-        } else if (e.getKeyCode() == KeyEvent.VK_UP) {
-            Game.engine.camera.rotation.rotate(Quaternion.fromEulerAngleDegree(-1, 0, 0));
-        } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-            Game.engine.camera.rotation.rotate(Quaternion.fromEulerAngleDegree(1, 0, 0));
+        switch (e.getKeyCode()) {
+            case KeyEvent.VK_W -> cameraMovement.z = 1;
+            case KeyEvent.VK_S -> cameraMovement.z = -1;
+            case KeyEvent.VK_A -> cameraMovement.x = -1;
+            case KeyEvent.VK_D -> cameraMovement.x = 1;
+            case KeyEvent.VK_SPACE -> cameraMovement.y = 1;
+            case KeyEvent.VK_SHIFT -> cameraMovement.y = -1;
+            case KeyEvent.VK_LEFT -> cameraRotation.y = -1;
+            case KeyEvent.VK_RIGHT -> cameraRotation.y = 1;
+            case KeyEvent.VK_UP -> cameraRotation.x = -1;
+            case KeyEvent.VK_DOWN -> cameraRotation.x = 1;
         }
     }
     @Override
     public void keyReleased(KeyEvent e) {
+        switch (e.getKeyCode()) {
+            case KeyEvent.VK_W, KeyEvent.VK_S -> cameraMovement.z = 0;
+            case KeyEvent.VK_A, KeyEvent.VK_D -> cameraMovement.x = 0;
+            case KeyEvent.VK_SPACE, KeyEvent.VK_SHIFT -> cameraMovement.y = 0;
+            case KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT -> cameraRotation.y = 0;
+            case KeyEvent.VK_UP, KeyEvent.VK_DOWN -> cameraRotation.x = 0;
+        }
+    }
     
+    
+    public static KeyHandler getInstance() {
+        if(instance == null) {
+            instance = new KeyHandler();
+        }
+        return instance;
     }
 }
