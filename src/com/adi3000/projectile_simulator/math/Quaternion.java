@@ -34,18 +34,21 @@ public class Quaternion {
     }
     
     public Vector3 toEulerAngle() {
-        double pitch = Math.asin(Math.min(2 * (w * y - x * z), 1));
+        double pitch = Math.asin(Math.max(Math.min(2 * (w * y - x * z), 1), -1));
         
         // Handle gimbal lock
         if (Math.abs(pitch - (Math.PI / 2)) <= 0.000001) {
-            return new Vector3(0, pitch, 2 * Math.atan2(x, w));
+            return new Vector3(2 * Math.atan2(x, w), pitch, 0);
         } else if (Math.abs(pitch + (Math.PI / 2)) <= 0.000001) {
-            return new Vector3(0, pitch, -2 * Math.atan2(x, w));
+            return new Vector3(-2 * Math.atan2(x, w), pitch, 0);
         }
         
         double roll = Math.atan2(2 * (w * x + y * z), Math.pow(w, 2) - Math.pow(x, 2) - Math.pow(y, 2) + Math.pow(z, 2));
         double yaw = Math.atan2(2 * (w * z + x * y), Math.pow(w, 2) + Math.pow(x, 2) - Math.pow(y, 2) - Math.pow(z, 2));
         
+        if (y > w) {
+            return new Vector3(Math.PI - Math.abs(roll), Math.PI - pitch, Math.PI - Math.abs(yaw));
+        }
         return new Vector3(roll, pitch, yaw);
     }
     
@@ -85,7 +88,7 @@ public class Quaternion {
     
     public void incrementAngle(double u, double v, double w) {
         Vector3 currentAngle = toEulerAngle();
-        set(fromEulerAngle(currentAngle.x + u, currentAngle.y + v,currentAngle.z + w));
+        set(fromEulerAngle(currentAngle.x + u, currentAngle.y + v, currentAngle.z + w));
     }
     
     public void incrementAngleDegree(double u, double v, double w) {
