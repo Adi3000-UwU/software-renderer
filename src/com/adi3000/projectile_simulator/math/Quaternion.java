@@ -20,36 +20,30 @@ public class Quaternion {
     public Quaternion(Vector3 axis, double rotation) {
         this(axis.x, axis.y, axis.z, rotation);
     }
-    
-    public static Quaternion fromEulerAngle(double u, double v, double w) {
-        return new Quaternion(
-                Math.sin(u / 2) * Math.cos(v / 2) * Math.cos(w / 2) - Math.cos(u / 2) * Math.sin(v / 2) * Math.sin(w / 2),
-                Math.cos(u / 2) * Math.sin(v / 2) * Math.cos(w / 2) + Math.sin(u / 2) * Math.cos(v / 2) * Math.sin(w / 2),
-                Math.cos(u / 2) * Math.cos(v / 2) * Math.sin(w / 2) - Math.sin(u / 2) * Math.sin(v / 2) * Math.cos(w / 2),
-                Math.cos(u / 2) * Math.cos(v / 2) * Math.cos(w / 2) + Math.sin(u / 2) * Math.sin(v / 2) * Math.sin(w / 2)
-        );
+    public Quaternion(Quaternion q) {
+        this(q.x, q.y, q.z, q.w);
     }
-    public static Quaternion fromEulerAngleDegree(double u, double v, double w) {
-        return fromEulerAngle(Math.toRadians(u), Math.toRadians(v), Math.toRadians(w));
+    public Quaternion(EulerAngle angle) {
+        this(angle.toQuaternion());
     }
     
-    public Vector3 toEulerAngle() {
+    public EulerAngle toEulerAngle() {
         double pitch = Math.asin(Math.max(Math.min(2 * (w * y - x * z), 1), -1));
         
         // Handle gimbal lock
         if (Math.abs(pitch - (Math.PI / 2)) <= 0.000001) {
-            return new Vector3(2 * Math.atan2(x, w), pitch, 0);
+            return new EulerAngle(2 * Math.atan2(x, w), pitch, 0);
         } else if (Math.abs(pitch + (Math.PI / 2)) <= 0.000001) {
-            return new Vector3(-2 * Math.atan2(x, w), pitch, 0);
+            return new EulerAngle(-2 * Math.atan2(x, w), pitch, 0);
         }
         
         double roll = Math.atan2(2 * (w * x + y * z), Math.pow(w, 2) - Math.pow(x, 2) - Math.pow(y, 2) + Math.pow(z, 2));
         double yaw = Math.atan2(2 * (w * z + x * y), Math.pow(w, 2) + Math.pow(x, 2) - Math.pow(y, 2) - Math.pow(z, 2));
         
         if (y > w) {
-            return new Vector3(Math.PI - Math.abs(roll), Math.PI - pitch, Math.PI - Math.abs(yaw));
+            return new EulerAngle(Math.PI - Math.abs(roll), Math.PI - pitch, Math.PI - Math.abs(yaw));
         }
-        return new Vector3(roll, pitch, yaw);
+        return new EulerAngle(roll, pitch, yaw);
     }
     
     public void set(double x, double y, double z, double w) {
@@ -60,6 +54,9 @@ public class Quaternion {
     }
     public void set(Quaternion q) {
         set(q.x, q.y, q.z, q.w);
+    }
+    public void set(EulerAngle angle) {
+        set(angle.toQuaternion());
     }
     
     @Override
@@ -86,13 +83,9 @@ public class Quaternion {
         set(mult(this, rotation));
     }
     
-    public void incrementAngle(double u, double v, double w) {
-        Vector3 currentAngle = toEulerAngle();
-        set(fromEulerAngle(currentAngle.x + u, currentAngle.y + v, currentAngle.z + w));
-    }
-    
-    public void incrementAngleDegree(double u, double v, double w) {
-        incrementAngle(Math.toRadians(u), Math.toRadians(v), Math.toRadians(w));
+    public void incrementAngle(EulerAngle changeAngle) {
+        EulerAngle currentAngle = toEulerAngle();
+        set(currentAngle.add(changeAngle));
     }
     
 }

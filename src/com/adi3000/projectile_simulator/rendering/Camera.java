@@ -1,5 +1,6 @@
 package com.adi3000.projectile_simulator.rendering;
 
+import com.adi3000.projectile_simulator.math.EulerAngle;
 import com.adi3000.projectile_simulator.math.Quaternion;
 import com.adi3000.projectile_simulator.math.Vector2;
 import com.adi3000.projectile_simulator.math.Vector3;
@@ -22,7 +23,7 @@ public class Camera {
     }
     
     public void moveCamera(Vector3 v) {
-        Vector3 eulerAngle = rotation.toEulerAngle();
+        EulerAngle eulerAngle = rotation.toEulerAngle();
         
         Vector2 plane = new Vector2(v.x, v.z);
         plane.rotate(-eulerAngle.y);

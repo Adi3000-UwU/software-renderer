@@ -1,5 +1,6 @@
 package com.adi3000.projectile_simulator.main;
 
+import com.adi3000.projectile_simulator.math.EulerAngle;
 import com.adi3000.projectile_simulator.math.Quaternion;
 import com.adi3000.projectile_simulator.math.Vector3;
 import com.adi3000.projectile_simulator.rendering.Camera;
@@ -23,27 +24,27 @@ public class GameManager {
     public GameManager() {
         engine = new Engine();
         
-        camera = new Camera(new Vector3(0, 0, 0), Quaternion.fromEulerAngleDegree(0, 0, 0));
+        camera = new Camera(new Vector3(0, 0, 0), new Quaternion(new EulerAngle(0, 0, 0).toRad()));
         
-        meshes.add(createCube(new Vector3(0, 0, 4), Quaternion.fromEulerAngleDegree(0, 0, 0)));
-        meshes.add(createCube(new Vector3(3, 0, 6), Quaternion.fromEulerAngleDegree(45.26, 0, 35.26)));
+        meshes.add(createCube(new Vector3(0, 0, 4), new Quaternion(new EulerAngle(0, 0, 0).toRad())));
+        meshes.add(createCube(new Vector3(3, 0, 6), new Quaternion(new EulerAngle(45.26, 0, 35.26).toRad())));
     }
     
     
     public void tick() {
-        meshes.get(1).rotation.rotate(Quaternion.fromEulerAngleDegree(0, 1.2, 0));
-    
-        KeyHandler keyHandler = KeyHandler.getInstance();
+        meshes.get(1).rotation.rotate(new Quaternion(new EulerAngle(0, 1.2, 0).toRad()));
         
+        KeyHandler keyHandler = KeyHandler.getInstance();
+
 //        camera.rotation.rotate(Quaternion.fromEulerAngleDegree(keyHandler.cameraRotation.x * cameraRotationSpeed, keyHandler.cameraRotation.y * cameraRotationSpeed, 0));
-        camera.rotation.incrementAngleDegree(keyHandler.cameraRotation.x * cameraRotationSpeed, keyHandler.cameraRotation.y * cameraRotationSpeed, 0);
+        camera.rotation.incrementAngle(new EulerAngle(keyHandler.cameraRotation.x * cameraRotationSpeed, keyHandler.cameraRotation.y * cameraRotationSpeed, 0).toRad());
         camera.moveCamera(keyHandler.cameraMovement.mult(cameraMoveSpeed));
         
     }
     
     public void render(BufferedImage image) {
         engine.render(image, camera, meshes);
-    
+        
     }
     
     
