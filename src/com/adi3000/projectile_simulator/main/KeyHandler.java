@@ -1,6 +1,6 @@
 package com.adi3000.projectile_simulator.main;
 
-import com.adi3000.projectile_simulator.math.Vector2;
+import com.adi3000.projectile_simulator.math.EulerAngle;
 import com.adi3000.projectile_simulator.math.Vector3;
 
 import java.awt.event.KeyEvent;
@@ -14,7 +14,7 @@ public class KeyHandler implements KeyListener {
     
     
     public Vector3 cameraMovement = new Vector3();
-    public Vector2 cameraRotation = new Vector2();
+    public EulerAngle cameraRotation = new EulerAngle();
     
     
     @Override

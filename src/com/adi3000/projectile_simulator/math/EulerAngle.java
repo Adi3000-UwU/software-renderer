@@ -47,8 +47,8 @@ public class EulerAngle {
         this.y = y;
         this.z = z;
     }
-    public void set(EulerAngle v) {
-        set(v.x, v.y, v.z);
+    public void set(EulerAngle e) {
+        set(e.x, e.y, e.z);
     }
     public void set(Quaternion q) {
         set(q.toEulerAngle());
@@ -61,16 +61,27 @@ public class EulerAngle {
         return new EulerAngle(Math.toRadians(x), Math.toRadians(y), Math.toRadians(z));
     }
     
-    public EulerAngle add(EulerAngle v) {
-        return add(this, v);
+    public EulerAngle add(EulerAngle e) {
+        return add(this, e);
     }
-    public static EulerAngle add(EulerAngle v1, EulerAngle v2) {
-        return new EulerAngle(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z);
+    public static EulerAngle add(EulerAngle e1, EulerAngle e2) {
+        return new EulerAngle(e1.x + e2.x, e1.y + e2.y, e1.z + e2.z);
     }
-    public EulerAngle sub(EulerAngle v) {
-        return sub(this, v);
+    public EulerAngle sub(EulerAngle e) {
+        return sub(this, e);
     }
-    public static EulerAngle sub(EulerAngle v1, EulerAngle v2) {
-        return new EulerAngle(v1.x - v2.x, v1.y - v2.y, v1.z - v2.z);
+    public static EulerAngle sub(EulerAngle e1, EulerAngle e2) {
+        return new EulerAngle(e1.x - e2.x, e1.y - e2.y, e1.z - e2.z);
+    }
+    public EulerAngle mult(double scalar) {
+        return mult(this, scalar);
+    }
+    public static EulerAngle mult(EulerAngle e, double scalar) {
+        return new EulerAngle(e.x * scalar, e.y * scalar, e.z * scalar);
+    }
+    
+    public EulerAngle increment(EulerAngle e) {
+        set(add(e));
+        return this;
     }
 }

@@ -24,7 +24,7 @@ public class GameManager {
     public GameManager() {
         engine = new Engine();
         
-        camera = new Camera(new Vector3(0, 0, 0), new Quaternion(new EulerAngle(0, 0, 0).toRad()));
+        camera = new Camera(new Vector3(0, 0, 0), new EulerAngle(0, 0, 0).toRad());
         
         meshes.add(createCube(new Vector3(0, 0, 4), new Quaternion(new EulerAngle(0, 0, 0).toRad())));
         meshes.add(createCube(new Vector3(3, 0, 6), new Quaternion(new EulerAngle(45.26, 0, 35.26).toRad())));
@@ -36,8 +36,7 @@ public class GameManager {
         
         KeyHandler keyHandler = KeyHandler.getInstance();
 
-//        camera.rotation.rotate(Quaternion.fromEulerAngleDegree(keyHandler.cameraRotation.x * cameraRotationSpeed, keyHandler.cameraRotation.y * cameraRotationSpeed, 0));
-        camera.rotation.incrementAngle(new EulerAngle(keyHandler.cameraRotation.x * cameraRotationSpeed, keyHandler.cameraRotation.y * cameraRotationSpeed, 0).toRad());
+        camera.rotation.increment(keyHandler.cameraRotation.mult(cameraRotationSpeed).toRad());
         camera.moveCamera(keyHandler.cameraMovement.mult(cameraMoveSpeed));
         
     }

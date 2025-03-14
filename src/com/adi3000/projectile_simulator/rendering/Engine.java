@@ -31,7 +31,7 @@ public class Engine {
         pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
         zbuffer = Arrays.copyOf(emptyZBuffer, pixels.length);
         
-        Matrix viewMatrix = Matrix.getViewMatrix(camera.position, camera.rotation);
+        Matrix viewMatrix = Matrix.getViewMatrix(camera.position, camera.rotation.toQuaternion());
         
         for(Mesh mesh: meshes) {
             screenVertices = new ArrayList<>();
