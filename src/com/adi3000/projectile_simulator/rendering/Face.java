@@ -9,9 +9,11 @@ import java.util.ArrayList;
 public class Face {
     
     private int[] vertexIndices;
+    private int[] uvIndices;
     
-    public Face(int[] vertexIndices) {
+    public Face(int[] vertexIndices, int[] uvIndices) {
         this.vertexIndices = vertexIndices;
+        this.uvIndices = uvIndices;
     }
     
     public ArrayList<Vector3> getFaceVertices(ArrayList<Vector3> meshVertices) {
@@ -22,6 +24,16 @@ public class Face {
         }
         
         return faceVertices;
+    }
+    
+    public ArrayList<Vector2> getFaceUVs(ArrayList<Vector2> meshUVs) {
+        ArrayList<Vector2> faceUVs = new ArrayList<>();
+        
+        for (int uvIndex : uvIndices) {
+            faceUVs.add(meshUVs.get(uvIndex));
+        }
+        
+        return faceUVs;
     }
     
     public Vector3 getBarycentricCoords(ArrayList<Vector3> triangleVertices, Vector3 point) {

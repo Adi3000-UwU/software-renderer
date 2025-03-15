@@ -13,7 +13,7 @@ public class Vector3 {
         this.z = z;
     }
     public Vector3() {
-        this(0,0,0);
+        this(0, 0, 0);
     }
     public Vector3(Vector3 v) {
         this(v.x, v.y, v.z);
@@ -23,6 +23,9 @@ public class Vector3 {
     }
     public Vector3(Vector2 v) {
         this(v.x, v.y, 0);
+    }
+    public Vector3(Vector2 v, double scalar) {
+        this(v.x, v.y, scalar);
     }
     public Vector3(double[] components) {
         this(components[0], components[1], components[2]);

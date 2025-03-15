@@ -2,6 +2,7 @@ package com.adi3000.projectile_simulator.rendering;
 
 import com.adi3000.projectile_simulator.main.Game;
 import com.adi3000.projectile_simulator.math.Matrix;
+import com.adi3000.projectile_simulator.math.Vector2;
 import com.adi3000.projectile_simulator.math.Vector3;
 import com.adi3000.projectile_simulator.math.Vector4;
 
@@ -33,7 +34,7 @@ public class Engine {
         
         Matrix viewMatrix = Matrix.getViewMatrix(camera.position, camera.rotation.toQuaternion());
         
-        for(Mesh mesh: meshes) {
+        for (Mesh mesh : meshes) {
             screenVertices = new ArrayList<>();
             ndcVertices = new ArrayList<>();
             
@@ -65,6 +66,13 @@ public class Engine {
             ArrayList<Vector3> faceNdc = face.getFaceVertices(ndcVertices);
             Rectangle boundingBox = face.getTriangleBoundingBox(faceVertices);
             
+            ArrayList<Vector2> faceUVs = face.getFaceUVs(mesh.meshUVs);
+            
+            Vector3 at = new Vector3(faceUVs.get(0), 1).div(faceVertices.get(0).z);
+            Vector3 bt = new Vector3(faceUVs.get(1), 1).div(faceVertices.get(1).z);
+            Vector3 ct = new Vector3(faceUVs.get(2), 1).div(faceVertices.get(2).z);
+            
+            
             // Quick fix, TODO Add frustum culling to fix objects apearing from behind the screen
             if (faceVertices.get(0).z < -0 || faceVertices.get(1).z < 0 || faceVertices.get(2).z < 0) {
                 continue;
@@ -89,7 +97,23 @@ public class Engine {
                         }
                         zbuffer[index] = newZ;
                         
-                        pixels[index] = new Color((int) (barycentricCoords.x * 255), (int) (barycentricCoords.y * 255), (int) (barycentricCoords.z * 255)).getRGB();
+                        double wt = barycentricCoords.x * at.z + barycentricCoords.y * bt.z + barycentricCoords.z * ct.z;
+                        double uvx = (barycentricCoords.x * at.x + barycentricCoords.y * bt.x + barycentricCoords.z * ct.x) / wt;
+                        double uvy = (barycentricCoords.x * at.y + barycentricCoords.y * bt.y + barycentricCoords.z * ct.y) / wt;
+                        
+                        int tx = (int) (uvx * (mesh.texture.getWidth() - 1));
+                        int ty = (int) (uvy * (mesh.texture.getHeight() - 1));
+                        
+                        int textureIndex = ty * mesh.texture.getWidth() + tx;
+                        
+                        // barycentricCoords to color
+//                        pixels[index] = new Color((int) (barycentricCoords.x * 255), (int) (barycentricCoords.y * 255), (int) (barycentricCoords.z * 255)).getRGB();
+                        // uv coords to color
+//                        pixels[index] = new Color((int) (uvx * 255), (int) (uvy * 255), 0).getRGB();
+                        
+                        // color from texture
+                        pixels[index] = mesh.pixels[textureIndex];
+                        
                     }
                 }
             }
