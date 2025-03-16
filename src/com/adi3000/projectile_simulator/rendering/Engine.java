@@ -46,7 +46,7 @@ public class Engine {
     
     private void transformVertecies(Mesh mesh, Camera camera, Matrix viewMatrix) {
         for (Vector3 vertex : mesh.vertices) {
-            Vector3 worldPos = Matrix.getWorldMatrix(mesh.position, mesh.rotation).transform(vertex);
+            Vector3 worldPos = Matrix.getWorldMatrix(mesh.position, mesh.scale, mesh.rotation).transform(vertex);
             Vector3 viewPos = viewMatrix.transform(worldPos);
             Vector4 clip = Matrix.getProjectionMatrix(camera.fov, Game.ASPECT_RATIO, camera.zNear, camera.zFar).transform(viewPos.toVector4());
             
@@ -78,7 +78,7 @@ public class Engine {
                 continue;
             }
             
-            if (faceNdc.get(1).sub(faceNdc.get(0)).cross(faceNdc.get(2).sub(faceNdc.get(0))).z < 0) {
+            if (faceNdc.get(1).sub(faceNdc.get(0)).cross(faceNdc.get(2).sub(faceNdc.get(0))).z >= 0) {
                 continue;
             }
             
@@ -101,8 +101,8 @@ public class Engine {
                         double uvx = (barycentricCoords.x * at.x + barycentricCoords.y * bt.x + barycentricCoords.z * ct.x) / wt;
                         double uvy = (barycentricCoords.x * at.y + barycentricCoords.y * bt.y + barycentricCoords.z * ct.y) / wt;
                         
-                        int tx = (int) (uvx * (mesh.texture.getWidth() - 1));
-                        int ty = (int) (uvy * (mesh.texture.getHeight() - 1));
+                        int tx = Math.min((int) (uvx * (mesh.texture.getWidth())), mesh.texture.getWidth() - 1);
+                        int ty = Math.min((int) (uvy * (mesh.texture.getHeight())), mesh.texture.getHeight() - 1);
                         
                         int textureIndex = ty * mesh.texture.getWidth() + tx;
                         

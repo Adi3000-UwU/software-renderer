@@ -2,7 +2,6 @@ package com.adi3000.projectile_simulator.main;
 
 import com.adi3000.projectile_simulator.math.EulerAngle;
 import com.adi3000.projectile_simulator.math.Quaternion;
-import com.adi3000.projectile_simulator.math.Vector2;
 import com.adi3000.projectile_simulator.math.Vector3;
 import com.adi3000.projectile_simulator.rendering.Camera;
 import com.adi3000.projectile_simulator.rendering.Engine;
@@ -27,8 +26,9 @@ public class GameManager {
         
         camera = new Camera(new Vector3(0, 0, 0), new EulerAngle(0, 0, 0).toRad());
         
-        meshes.add(createCube(new Vector3(0, 0, 4), new Quaternion(new EulerAngle(0, 0, 0).toRad()), "/Textures/dirt.png"));
-        meshes.add(createCube(new Vector3(3, 0, 6), new Quaternion(new EulerAngle(45.26, 0, 35.26).toRad()), "/Textures/dirt.png"));
+        meshes.add(new Mesh(new Vector3(0, 0, 4), new Quaternion(new EulerAngle(0, 0, 0).toRad()), "cube.obj"));
+        meshes.add(new Mesh(new Vector3(3, 0, 6), new Quaternion(new EulerAngle(45.26, 0, 35.26).toRad()), "cube.obj"));
+        
     }
     
     
@@ -47,42 +47,4 @@ public class GameManager {
         
     }
     
-    
-    private Mesh createCube(Vector3 position, Quaternion rotation, String texturePath) {
-        Mesh mesh = new Mesh(position, rotation, texturePath);
-        
-        mesh.addVertex(new Vector3(-1, -1, -1));
-        mesh.addVertex(new Vector3(1, -1, -1));
-        mesh.addVertex(new Vector3(1, 1, -1));
-        mesh.addVertex(new Vector3(-1, 1, -1));
-        mesh.addVertex(new Vector3(-1, -1, 1));
-        mesh.addVertex(new Vector3(1, -1, 1));
-        mesh.addVertex(new Vector3(1, 1, 1));
-        mesh.addVertex(new Vector3(-1, 1, 1));
-        
-        mesh.addUV(new Vector2(0, 0));
-        mesh.addUV(new Vector2(1, 0));
-        mesh.addUV(new Vector2(0, 1));
-        mesh.addUV(new Vector2(1, 1));
-        
-        mesh.addFace(new int[] {0, 1, 3}, new int[] {2, 3, 0});
-        mesh.addFace(new int[] {3, 1, 2}, new int[] {0, 3, 1});
-        
-        mesh.addFace(new int[] {1, 5, 2}, new int[] {2, 3, 0});
-        mesh.addFace(new int[] {2, 5, 6}, new int[] {0, 3, 1});
-        
-        mesh.addFace(new int[] {5, 4, 6}, new int[] {2, 3, 0});
-        mesh.addFace(new int[] {6, 4, 7}, new int[] {0, 3, 1});
-        
-        mesh.addFace(new int[] {4, 0, 7}, new int[] {2, 3, 0});
-        mesh.addFace(new int[] {7, 0, 3}, new int[] {0, 3, 1});
-        
-        mesh.addFace(new int[] {3, 2, 7}, new int[] {2, 3, 0});
-        mesh.addFace(new int[] {7, 2, 6}, new int[] {0, 3, 1});
-        
-        mesh.addFace(new int[] {4, 5, 0}, new int[] {2, 3, 0});
-        mesh.addFace(new int[] {0, 5, 1}, new int[] {0, 3, 1});
-        
-        return mesh;
-    }
 }

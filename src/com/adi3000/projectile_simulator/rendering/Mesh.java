@@ -8,9 +8,13 @@ import javax.imageio.*;
 import javax.imageio.stream.ImageInputStream;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Objects;
 
 public class Mesh {
@@ -19,20 +23,28 @@ public class Mesh {
     public ArrayList<Face> faces = new ArrayList<>();
     public ArrayList<Vector2> meshUVs = new ArrayList<>();
     
+    private String texturePath;
     public BufferedImage texture;
     public int[] pixels;
     
     public Vector3 position;
+    public Vector3 scale;
     public Quaternion rotation;
     
-    public Mesh(String texturePath) {
-        this(new Vector3(0, 0, 0), new Quaternion(), texturePath);
+    public Mesh(String modelPath) {
+        this(new Vector3(0, 0, 0), new Quaternion(), modelPath);
     }
-    public Mesh(Vector3 position, Quaternion rotation, String texturePath) {
+    public Mesh(Vector3 position, Quaternion rotation, String modelPath) {
+        this(position, new Vector3(1, 1, 1), rotation, modelPath);
+    }
+    public Mesh(Vector3 position, Vector3 scale, Quaternion rotation, String modelPath) {
         this.position = position;
+        this.scale = scale;
         this.rotation = rotation;
         
-        texture = getTextureInIntFormat(texturePath);
+        loadModel("/Models/" + modelPath);
+        
+        texture = getTextureInIntFormat("/Textures/" + texturePath);
         pixels = ((DataBufferInt) texture.getRaster().getDataBuffer()).getData();
     }
     
@@ -95,4 +107,46 @@ public class Mesh {
         return null;
     }
     
+    private void loadModel(String modelPath) {
+        List<String> lines;
+        
+        try {
+            InputStream in = Objects.requireNonNull(getClass().getResourceAsStream(modelPath));
+            BufferedReader br = new BufferedReader(new InputStreamReader(in));
+            lines = br.lines().toList();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        
+        for (String line : lines) {
+            if (line.startsWith("#")) continue;
+            
+            String[] splitLine = line.split(" ");
+            
+            switch (splitLine[0]) {
+                case "v":
+                    addVertex(new Vector3(Double.parseDouble(splitLine[1]), Double.parseDouble(splitLine[2]), Double.parseDouble(splitLine[3])));
+                    break;
+                case "vt":
+                    addUV(new Vector2(Double.parseDouble(splitLine[1]), Double.parseDouble(splitLine[2])));
+                    break;
+                case "f":
+                    int[] vertexIndices = new int[3];
+                    int[] uvIndices = new int[3];
+                    for (int i = 0; i < 3; i++) {
+                        String[] splitVertex = splitLine[i + 1].split("/");
+                        
+                        vertexIndices[i] = Integer.parseInt(splitVertex[0]) - 1;
+                        uvIndices[i] = Integer.parseInt(splitVertex[1]) - 1;
+                    }
+                    addFace(vertexIndices, uvIndices);
+                    break;
+                case "t":
+                    texturePath = splitLine[1];
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
 }

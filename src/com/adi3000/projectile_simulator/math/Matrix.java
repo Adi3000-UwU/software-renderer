@@ -119,10 +119,10 @@ public class Matrix {
     }
     
     public static Matrix getWorldMatrix(Vector3 position, Quaternion rotation) {
-        return getWorldMatrix(position, rotation, new Vector3(1, 1, 1));
+        return getWorldMatrix(position, new Vector3(1, 1, 1), rotation);
     }
     
-    public static Matrix getWorldMatrix(Vector3 position, Quaternion rotation, Vector3 scale) {
+    public static Matrix getWorldMatrix(Vector3 position, Vector3 scale, Quaternion rotation) {
         double a = (1 - (2 * Math.pow(rotation.y, 2) + 2 * Math.pow(rotation.z, 2))) * scale.x;
         double b = (2 * rotation.x * rotation.y - 2 * rotation.w * rotation.z) * scale.y;
         double c = (2 * rotation.x * rotation.z + 2 * rotation.w * rotation.y) * scale.z;
