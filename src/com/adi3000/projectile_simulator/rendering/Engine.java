@@ -98,8 +98,8 @@ public class Engine {
                         zbuffer[index] = newZ;
                         
                         double wt = barycentricCoords.x * at.z + barycentricCoords.y * bt.z + barycentricCoords.z * ct.z;
-                        double uvx = (barycentricCoords.x * at.x + barycentricCoords.y * bt.x + barycentricCoords.z * ct.x) / wt;
-                        double uvy = (barycentricCoords.x * at.y + barycentricCoords.y * bt.y + barycentricCoords.z * ct.y) / wt;
+                        double uvx = 1 - ((barycentricCoords.x * at.x + barycentricCoords.y * bt.x + barycentricCoords.z * ct.x) / wt);
+                        double uvy = 1 - ((barycentricCoords.x * at.y + barycentricCoords.y * bt.y + barycentricCoords.z * ct.y) / wt);
                         
                         int tx = Math.min((int) (uvx * (mesh.texture.getWidth())), mesh.texture.getWidth() - 1);
                         int ty = Math.min((int) (uvy * (mesh.texture.getHeight())), mesh.texture.getHeight() - 1);
