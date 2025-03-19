@@ -1,5 +1,7 @@
 package com.adi3000.projectile_simulator.main;
 
+import com.adi3000.projectile_simulator.preferences.Settings;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -7,11 +9,11 @@ import java.awt.image.BufferedImage;
 public class Game extends JPanel implements Runnable {
     
     // Dimensions
-    public static final int WIDTH = 854;
-    public static final int HEIGHT = 480;
-    public static final double ASPECT_RATIO = (double) WIDTH /HEIGHT;
-    private static final int SCREEN_WIDTH = 1280;
-    private static final int SCREEN_HEIGHT = 720;
+    public static int WIDTH;
+    public static int HEIGHT;
+    public static double ASPECT_RATIO;
+    private static int SCREEN_WIDTH;
+    private static int SCREEN_HEIGHT;
     
     // Game thread
     private Thread thread;
@@ -25,15 +27,29 @@ public class Game extends JPanel implements Runnable {
     private Graphics2D g2d;
     
     public static GameManager gameManager;
+    public static Settings settings;
+    
     
     public Game() {
         super();
+        loadSettings();
         
         setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
         
         setFocusable(true);
         requestFocus();
     }
+    
+    private void loadSettings() {
+        settings = Settings.load();
+        
+        SCREEN_WIDTH = settings.screenWidth;
+        SCREEN_HEIGHT = settings.screenHeight;
+        WIDTH = (int) (SCREEN_WIDTH * settings.screenPercentage);
+        HEIGHT = (int) (SCREEN_HEIGHT * settings.screenPercentage);
+        ASPECT_RATIO = (double) WIDTH / HEIGHT;
+    }
+    
     
     public void addNotify() {
         super.addNotify();
@@ -45,6 +61,7 @@ public class Game extends JPanel implements Runnable {
             thread.start();
         }
     }
+    
     
     private void init() {
         image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB);
