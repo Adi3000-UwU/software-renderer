@@ -26,14 +26,18 @@ public class GameManager {
         
         camera = new Camera(new Vector3(0, 0, 0), new EulerAngle(0, 0, 0).toRad());
         
+        
         meshes.add(new Mesh(new Vector3(0, 0, 4), new Quaternion(new EulerAngle(0, 0, 0).toRad()), "cube.obj"));
         meshes.add(new Mesh(new Vector3(3, 0, 6), new Quaternion(new EulerAngle(45.26, 0, 35.26).toRad()), "cube.obj"));
         
+        meshes.add(new Mesh(new Vector3(-3, 0, 7), new Quaternion(new EulerAngle(0, 0, 0).toRad()), "plane.obj"));
     }
     
     
     public void tick() {
         meshes.get(1).rotation.rotate(new Quaternion(new EulerAngle(0, 1.2, 0).toRad()));
+        meshes.get(2).rotation.rotate(new Quaternion(new EulerAngle(0, 1.2, 0).toRad()));
+        
         
         KeyHandler keyHandler = KeyHandler.getInstance();
         

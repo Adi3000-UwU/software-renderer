@@ -21,6 +21,8 @@ public class Engine {
     private ArrayList<Vector3> screenVertices;
     private ArrayList<Vector3> ndcVertices;
     
+    public int displayMode = DISPLAY_NORMAL;
+    
     
     public Engine() {
         Arrays.fill(emptyZBuffer, 1);
@@ -95,7 +97,7 @@ public class Engine {
                         if (newZ > oldZ) {
                             continue;
                         }
-                        zbuffer[index] = newZ;
+                        
                         
                         double wt = barycentricCoords.x * at.z + barycentricCoords.y * bt.z + barycentricCoords.z * ct.z;
                         double uvx = 1 - ((barycentricCoords.x * at.x + barycentricCoords.y * bt.x + barycentricCoords.z * ct.x) / wt);
@@ -106,18 +108,29 @@ public class Engine {
                         
                         int textureIndex = ty * mesh.texture.getWidth() + tx;
                         
-                        // barycentricCoords to color
-//                        pixels[index] = new Color((int) (barycentricCoords.x * 255), (int) (barycentricCoords.y * 255), (int) (barycentricCoords.z * 255)).getRGB();
-                        // uv coords to color
-//                        pixels[index] = new Color((int) (uvx * 255), (int) (uvy * 255), 0).getRGB();
+                        switch (displayMode) {
+                            case DISPLAY_NORMAL:
+                                if ((mesh.pixels[textureIndex] & 0xff000000) >> 24 == 0) continue;
+                                pixels[index] = mesh.pixels[textureIndex];
+                                break;
+                            case DISPLAY_UV:
+                                pixels[index] = new Color((int) (uvx * 255), (int) (uvy * 255), 0).getRGB();
+                                break;
+                            case DISPLAY_FACE:
+                                pixels[index] = new Color((int) (barycentricCoords.x * 255), (int) (barycentricCoords.y * 255), (int) (barycentricCoords.z * 255)).getRGB();
+                                break;
+                        }
                         
-                        // color from texture
-                        pixels[index] = mesh.pixels[textureIndex];
+                        zbuffer[index] = newZ;
                         
                     }
                 }
             }
         }
     }
+    
+    public static final int DISPLAY_NORMAL = 0;
+    public static final int DISPLAY_UV = 1;
+    public static final int DISPLAY_FACE = 2;
     
 }
