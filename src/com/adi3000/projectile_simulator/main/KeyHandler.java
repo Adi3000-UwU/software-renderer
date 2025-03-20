@@ -20,7 +20,8 @@ public class KeyHandler implements KeyListener {
     
     public Vector3 cameraMovement = new Vector3();
     public EulerAngle cameraRotation = new EulerAngle();
-    
+    public int fovChange = 0;
+    public boolean sprint = false;
     
     @Override
     public void keyTyped(KeyEvent e) {
@@ -48,6 +49,12 @@ public class KeyHandler implements KeyListener {
             cameraRotation.x = -1;
         } else if (e.getKeyCode() == keyConfig.key_look_down) {
             cameraRotation.x = 1;
+        } else if (e.getKeyCode() == keyConfig.key_fov_increase) {
+            fovChange = 1;
+        } else if (e.getKeyCode() == keyConfig.key_fov_decrease) {
+            fovChange = -1;
+        } else if (e.getKeyCode() == keyConfig.key_sprint) {
+            sprint = true;
         }
     }
     @Override
@@ -62,6 +69,10 @@ public class KeyHandler implements KeyListener {
             cameraRotation.y = 0;
         } else if (e.getKeyCode() == keyConfig.key_look_up || e.getKeyCode() == keyConfig.key_look_down) {
             cameraRotation.x = 0;
+        } else if (e.getKeyCode() == keyConfig.key_fov_increase || e.getKeyCode() == keyConfig.key_fov_decrease) {
+            fovChange = 0;
+        } else if (e.getKeyCode() == keyConfig.key_sprint) {
+            sprint = false;
         }
     }
     

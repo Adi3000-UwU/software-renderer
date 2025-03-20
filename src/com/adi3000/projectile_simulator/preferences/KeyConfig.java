@@ -24,12 +24,16 @@ public class KeyConfig {
     public int key_left = KeyEvent.VK_A;
     public int key_right = KeyEvent.VK_D;
     public int key_up = KeyEvent.VK_SPACE;
-    public int key_down = KeyEvent.VK_SHIFT;
+    public int key_down = KeyEvent.VK_CONTROL;
+    public int key_sprint = KeyEvent.VK_SHIFT;
     
     public int key_look_left = KeyEvent.VK_LEFT;
     public int key_look_right = KeyEvent.VK_RIGHT;
     public int key_look_up = KeyEvent.VK_UP;
     public int key_look_down = KeyEvent.VK_DOWN;
+    
+    public int key_fov_increase = KeyEvent.VK_MINUS;
+    public int key_fov_decrease = KeyEvent.VK_PLUS;
     
     
     public static KeyConfig load() {

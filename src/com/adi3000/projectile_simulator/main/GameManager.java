@@ -17,9 +17,6 @@ public class GameManager {
     private Camera camera;
     private ArrayList<Mesh> meshes = new ArrayList<>();
     
-    private double cameraMoveSpeed = 0.1;
-    private double cameraRotationSpeed = 1;
-    
     
     public GameManager() {
         engine = new Engine();
@@ -38,12 +35,7 @@ public class GameManager {
         meshes.get(1).rotation.rotate(new Quaternion(new EulerAngle(0, 1.2, 0).toRad()));
         meshes.get(2).rotation.rotate(new Quaternion(new EulerAngle(0, 1.2, 0).toRad()));
         
-        
-        KeyHandler keyHandler = KeyHandler.getInstance();
-        
-        camera.rotation.increment(keyHandler.cameraRotation.mult(cameraRotationSpeed).toRad());
-        camera.moveCamera(keyHandler.cameraMovement.mult(cameraMoveSpeed));
-        
+        camera.tick();
     }
     
     public void render(BufferedImage image) {
