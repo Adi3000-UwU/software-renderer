@@ -1,4 +1,4 @@
-package com.adi3000.projectile_simulator.math;
+package com.adi3000.software_renderer.math;
 
 import java.util.Arrays;
 import java.util.Objects;

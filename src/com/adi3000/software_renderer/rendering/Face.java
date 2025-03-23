@@ -1,7 +1,7 @@
-package com.adi3000.projectile_simulator.rendering;
+package com.adi3000.software_renderer.rendering;
 
-import com.adi3000.projectile_simulator.math.Vector2;
-import com.adi3000.projectile_simulator.math.Vector3;
+import com.adi3000.software_renderer.math.Vector2;
+import com.adi3000.software_renderer.math.Vector3;
 
 import java.awt.*;
 import java.util.ArrayList;

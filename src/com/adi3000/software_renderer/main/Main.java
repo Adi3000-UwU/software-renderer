@@ -1,11 +1,11 @@
-package com.adi3000.projectile_simulator.main;
+package com.adi3000.software_renderer.main;
 
 import javax.swing.*;
 
 public class Main {
     
     public static void main(String[] args) {
-        JFrame window = new JFrame("Projectile Simulator");
+        JFrame window = new JFrame("Software Renderer");
         window.setContentPane(new Game());
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setResizable(false);

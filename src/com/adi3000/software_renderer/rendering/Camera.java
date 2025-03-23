@@ -1,9 +1,9 @@
-package com.adi3000.projectile_simulator.rendering;
+package com.adi3000.software_renderer.rendering;
 
-import com.adi3000.projectile_simulator.main.KeyHandler;
-import com.adi3000.projectile_simulator.math.EulerAngle;
-import com.adi3000.projectile_simulator.math.Vector2;
-import com.adi3000.projectile_simulator.math.Vector3;
+import com.adi3000.software_renderer.main.KeyHandler;
+import com.adi3000.software_renderer.math.EulerAngle;
+import com.adi3000.software_renderer.math.Vector2;
+import com.adi3000.software_renderer.math.Vector3;
 
 public class Camera {
     

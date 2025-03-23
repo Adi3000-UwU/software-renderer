@@ -1,6 +1,6 @@
-package com.adi3000.projectile_simulator.main;
+package com.adi3000.software_renderer.main;
 
-import com.adi3000.projectile_simulator.preferences.Settings;
+import com.adi3000.software_renderer.preferences.Settings;
 
 import javax.swing.*;
 import java.awt.*;

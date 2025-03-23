@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/ProjectileSimulator.iml" filepath="$PROJECT_DIR$/ProjectileSimulator.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SoftwareRenderer.iml" filepath="$PROJECT_DIR$/SoftwareRenderer.iml" />
     </modules>
   </component>
 </project>

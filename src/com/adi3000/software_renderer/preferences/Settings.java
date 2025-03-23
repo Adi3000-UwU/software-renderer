@@ -1,4 +1,4 @@
-package com.adi3000.projectile_simulator.preferences;
+package com.adi3000.software_renderer.preferences;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -15,7 +15,7 @@ public class Settings {
     
     private Settings() {}
     
-    static final String dir = System.getenv("appdata") + "/ProjectileSimulator";
+    static final String dir = System.getenv("appdata") + "/SoftwareRendererr";
     private static final Path filePath = Paths.get(dir + "/settings.json");
     
     

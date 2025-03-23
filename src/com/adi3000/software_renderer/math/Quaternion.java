@@ -1,4 +1,4 @@
-package com.adi3000.projectile_simulator.math;
+package com.adi3000.software_renderer.math;
 
 @SuppressWarnings("unused")
 public class Quaternion {

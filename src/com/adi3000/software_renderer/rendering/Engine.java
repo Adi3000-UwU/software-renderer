@@ -1,10 +1,10 @@
-package com.adi3000.projectile_simulator.rendering;
+package com.adi3000.software_renderer.rendering;
 
-import com.adi3000.projectile_simulator.main.Game;
-import com.adi3000.projectile_simulator.math.Matrix;
-import com.adi3000.projectile_simulator.math.Vector2;
-import com.adi3000.projectile_simulator.math.Vector3;
-import com.adi3000.projectile_simulator.math.Vector4;
+import com.adi3000.software_renderer.main.Game;
+import com.adi3000.software_renderer.math.Matrix;
+import com.adi3000.software_renderer.math.Vector2;
+import com.adi3000.software_renderer.math.Vector3;
+import com.adi3000.software_renderer.math.Vector4;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

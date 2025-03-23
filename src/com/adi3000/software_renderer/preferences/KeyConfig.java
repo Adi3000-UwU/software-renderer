@@ -1,4 +1,4 @@
-package com.adi3000.projectile_simulator.preferences;
+package com.adi3000.software_renderer.preferences;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

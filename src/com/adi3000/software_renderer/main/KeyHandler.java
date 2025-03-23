@@ -1,8 +1,8 @@
-package com.adi3000.projectile_simulator.main;
+package com.adi3000.software_renderer.main;
 
-import com.adi3000.projectile_simulator.math.EulerAngle;
-import com.adi3000.projectile_simulator.math.Vector3;
-import com.adi3000.projectile_simulator.preferences.KeyConfig;
+import com.adi3000.software_renderer.math.EulerAngle;
+import com.adi3000.software_renderer.math.Vector3;
+import com.adi3000.software_renderer.preferences.KeyConfig;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;

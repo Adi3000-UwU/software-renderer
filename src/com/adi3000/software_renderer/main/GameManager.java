@@ -1,11 +1,11 @@
-package com.adi3000.projectile_simulator.main;
+package com.adi3000.software_renderer.main;
 
-import com.adi3000.projectile_simulator.math.EulerAngle;
-import com.adi3000.projectile_simulator.math.Quaternion;
-import com.adi3000.projectile_simulator.math.Vector3;
-import com.adi3000.projectile_simulator.rendering.Camera;
-import com.adi3000.projectile_simulator.rendering.Engine;
-import com.adi3000.projectile_simulator.rendering.Mesh;
+import com.adi3000.software_renderer.math.EulerAngle;
+import com.adi3000.software_renderer.math.Quaternion;
+import com.adi3000.software_renderer.math.Vector3;
+import com.adi3000.software_renderer.rendering.Camera;
+import com.adi3000.software_renderer.rendering.Engine;
+import com.adi3000.software_renderer.rendering.Mesh;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
