@@ -35,16 +35,26 @@ public class Mesh {
         this(new Vector3(0, 0, 0), new Quaternion(), modelPath);
     }
     public Mesh(Vector3 position, Quaternion rotation, String modelPath) {
-        this(position, new Vector3(1, 1, 1), rotation, modelPath);
+        this(position, rotation, modelPath, "");
     }
     public Mesh(Vector3 position, Vector3 scale, Quaternion rotation, String modelPath) {
+        this(position, scale, rotation, modelPath, "");
+    }
+    public Mesh(Vector3 position, Quaternion rotation, String modelPath, String texturePath) {
+        this(position, new Vector3(1, 1, 1), rotation, modelPath, texturePath);
+    }
+    public Mesh(Vector3 position, Vector3 scale, Quaternion rotation, String modelPath, String texturePath) {
         this.position = position;
         this.scale = scale;
         this.rotation = rotation;
         
+        if (texturePath != null && !texturePath.trim().isEmpty()) {
+            this.texturePath = texturePath;
+        }
+        
         loadModel("/Models/" + modelPath);
         
-        texture = getTextureInIntFormat("/Textures/" + texturePath);
+        texture = getTextureInIntFormat("/Textures/" + this.texturePath);
         pixels = ((DataBufferInt) texture.getRaster().getDataBuffer()).getData();
     }
     
@@ -62,6 +72,8 @@ public class Mesh {
     
     
     private BufferedImage getTextureInIntFormat(String texturePath) {
+        if (getClass().getResource(texturePath) == null || texturePath.endsWith("/")) return generateErrorTexture();
+        
         try (ImageInputStream stream = ImageIO.createImageInputStream(Objects.requireNonNull(getClass().getResourceAsStream(texturePath)))) {
             // Find a suitable reader
             Iterator<ImageReader> readers = ImageIO.getImageReaders(stream);
@@ -89,6 +101,11 @@ public class Mesh {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+    private BufferedImage generateErrorTexture() {
+        BufferedImage errorTexture = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+        errorTexture.setRGB(0, 0, 0xffff00dc);
+        return errorTexture;
     }
     private ImageTypeSpecifier getIntPackedType(ImageReader reader) throws IOException {
         Iterator<ImageTypeSpecifier> types = reader.getImageTypes(0);
@@ -142,6 +159,7 @@ public class Mesh {
                     addFace(vertexIndices, uvIndices);
                     break;
                 case "t":
+                    if (texturePath != null && !texturePath.trim().isEmpty()) break;
                     texturePath = splitLine[1];
                     break;
                 default:
