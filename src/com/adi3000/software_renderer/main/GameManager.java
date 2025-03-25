@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public class GameManager {
     
-    private Engine engine;
+    public Engine engine;
     
     private Camera camera;
     private ArrayList<Mesh> meshes = new ArrayList<>();
@@ -25,15 +25,15 @@ public class GameManager {
         
         
         meshes.add(new Mesh(new Vector3(0, 0, 4), new Quaternion(new EulerAngle(0, 0, 0).toRad()), "cube.obj"));
-        meshes.add(new Mesh(new Vector3(3, 0, 6), new Quaternion(new EulerAngle(45.26, 0, 35.26).toRad()), "cube.obj"));
-        
-        meshes.add(new Mesh(new Vector3(-3, 0, 7), new Quaternion(new EulerAngle(0, 0, 0).toRad()), "plane.obj", "amongus.png"));
+//        meshes.add(new Mesh(new Vector3(3, 0, 6), new Quaternion(new EulerAngle(45.26, 0, 35.26).toRad()), "cube.obj"));
+
+//        meshes.add(new Mesh(new Vector3(-3, 0, 7), new Quaternion(new EulerAngle(0, 0, 0).toRad()), "plane.obj", "amongus.png"));
     }
     
     
     public void tick() {
-        meshes.get(1).rotation.rotate(new Quaternion(new EulerAngle(0, 1.2, 0).toRad()));
-        meshes.get(2).rotation.rotate(new Quaternion(new EulerAngle(0, 1.2, 0).toRad()));
+//        meshes.get(1).rotation.rotate(new Quaternion(new EulerAngle(0, 1.2, 0).toRad()));
+//        meshes.get(2).rotation.rotate(new Quaternion(new EulerAngle(0, 1.2, 0).toRad()));
         
         camera.tick();
     }

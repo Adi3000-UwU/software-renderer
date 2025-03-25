@@ -21,7 +21,7 @@ public class Engine {
     private ArrayList<Vector3> screenVertices;
     private ArrayList<Vector3> ndcVertices;
     
-    public int displayMode = DISPLAY_NORMAL;
+    public int displayMode = DISPLAY_UV;
     
     
     public Engine() {
@@ -74,11 +74,14 @@ public class Engine {
             Vector3 bt = new Vector3(faceUVs.get(1), 1).div(faceVertices.get(1).z);
             Vector3 ct = new Vector3(faceUVs.get(2), 1).div(faceVertices.get(2).z);
             
+            int faceIndex = mesh.faces.indexOf(face);
+            int faceHash = Integer.hashCode(faceIndex*12390944);
+            int faceColor = faceHash ^ 0xff000000;
             
             // Quick fix, TODO Add frustum culling to fix objects apearing from behind the screen
-            if (faceVertices.get(0).z < -0 || faceVertices.get(1).z < 0 || faceVertices.get(2).z < 0) {
-                continue;
-            }
+//            if (faceVertices.get(0).z < -0 || faceVertices.get(1).z < 0 || faceVertices.get(2).z < 0) {
+//                continue;
+//            }
             
             if (faceNdc.get(1).sub(faceNdc.get(0)).cross(faceNdc.get(2).sub(faceNdc.get(0))).z >= 0) {
                 continue;
@@ -114,10 +117,19 @@ public class Engine {
                                 pixels[index] = mesh.pixels[textureIndex];
                                 break;
                             case DISPLAY_UV:
-                                pixels[index] = new Color((int) (uvx * 255), (int) (uvy * 255), 0).getRGB();
+                                if (uvx < 0 || uvy < 0) {
+                                    pixels[index] = new Color(100, (int) Math.max(Math.min(-uvx / 2 * 255, 255), 0), (int) Math.max(Math.min(-uvy / 2 * 255, 255), 0)).getRGB();
+                                } else if (uvx > 1 || uvy > 1) {
+                                    pixels[index] = new Color((int) Math.max(Math.min(uvy / 2 * 255, 255), 100), 0, (int) Math.max(Math.min(uvx / 2 * 255, 255), 0)).getRGB();
+                                } else {
+                                    pixels[index] = new Color((int) Math.max(Math.min(uvx * 255, 255), 0), (int) Math.max(Math.min(uvy * 255, 255), 0), 0).getRGB();
+                                }
                                 break;
                             case DISPLAY_FACE:
                                 pixels[index] = new Color((int) (barycentricCoords.x * 255), (int) (barycentricCoords.y * 255), (int) (barycentricCoords.z * 255)).getRGB();
+                                break;
+                            case DISPLAY_FACE_ID:
+                                pixels[index] = faceColor;
                                 break;
                         }
                         
@@ -132,5 +144,6 @@ public class Engine {
     public static final int DISPLAY_NORMAL = 0;
     public static final int DISPLAY_UV = 1;
     public static final int DISPLAY_FACE = 2;
+    public static final int DISPLAY_FACE_ID = 3;
     
 }

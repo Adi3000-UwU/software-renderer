@@ -55,6 +55,9 @@ public class KeyHandler implements KeyListener {
             fovChange = -1;
         } else if (e.getKeyCode() == keyConfig.key_sprint) {
             sprint = true;
+        } else if (e.getKeyCode() == KeyEvent.VK_P) {
+            int displayMode = Game.gameManager.engine.displayMode;
+            Game.gameManager.engine.displayMode = ((displayMode) % 3) + 1;
         }
     }
     @Override
