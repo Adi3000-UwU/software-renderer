@@ -15,7 +15,7 @@ public class Settings {
     
     private Settings() {}
     
-    static final String dir = System.getenv("appdata") + "/SoftwareRendererr";
+    static final String dir = System.getenv("appdata") + "/SoftwareRenderer";
     private static final Path filePath = Paths.get(dir + "/settings.json");
     
     
